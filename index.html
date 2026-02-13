@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouva Prasetya Ardhana | Portofolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#261CC1', 
+                        darkBg: '#0F172A', 
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body { 
+            background-color: #ffffff; 
+            color: #261CC1; 
+            transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow-x: hidden;
+        }
+        
+        .dark body { 
+            background-color: #0F172A !important; 
+            color: #F8FAFC; 
+        }
+        
+        .glass-nav { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .nav-scrolled {
+            @apply backdrop-blur-xl bg-white/80 border-b border-primary/10;
+        }
+        .dark .nav-scrolled {
+            @apply bg-darkBg/80 border-white/5;
+        }
+        
+        /* Mobile Menu Animations */
+        .mobile-menu-enter { transform: translateY(-100%); opacity: 0; }
+        .mobile-menu-enter-active { transform: translateY(0); opacity: 1; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mobile-menu-leave-active { transform: translateY(-100%); opacity: 0; transition: all 0.4s ease-in; }
+
+        .skill-card { @apply flex flex-col items-center p-6 rounded-3xl transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl bg-gray-50 border border-transparent; }
+        .dark .skill-card { @apply bg-slate-800/50 border-white/5; }
+        
+        /* Premium Dark Mode Toggle Animation */
+        .theme-toggle-container {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-wrapper {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sun-icon {
+            transform: translateY(0) scale(1) rotate(0deg);
+            opacity: 1;
+        }
+        .dark .sun-icon {
+            transform: translateY(30px) scale(0) rotate(45deg);
+            opacity: 0;
+        }
+
+        .moon-icon {
+            transform: translateY(-30px) scale(0) rotate(-45deg);
+            opacity: 0;
+        }
+        .dark .moon-icon {
+            transform: translateY(0) scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { @apply bg-transparent; }
+        ::-webkit-scrollbar-thumb { @apply bg-primary/20 rounded-full; }
+    </style>
+</head>
+<body x-data="{ 
+    darkMode: false, 
+    lang: 'id',
+    mobileMenu: false,
+    scrolled: false,
+    content: {
+        id: {
+            name: 'Nouva Prasetya',
+            nav_home: 'Beranda',
+            nav_skills: 'Keahlian',
+            nav_blog: 'Blog',
+            nav_exp: 'Pengalaman',
+            hero_title: 'Halo, Aku Nouva! 🚀',
+            hero_subtitle: 'Network Engineer & Web Developer',
+            hero_desc: 'Lulusan SMK Cyber Media Jakarta jurusan TKJ. Spesialis dalam infrastruktur jaringan, operasional data center, dan pengembangan web modern.',
+            hero_btn_contact: 'Hubungi Saya',
+            hero_btn_view: 'Lihat Pengalaman',
+            skill_title: 'Teknologi & Keahlian',
+            blog_title: 'Catatan Digital',
+            blog_card1_title: 'Konfigurasi VLAN',
+            blog_card1_desc: 'Catatan teknis mengenai implementasi virtual LAN untuk pemisahan traffic data center...',
+            blog_card2_title: 'Keamanan Jaringan',
+            blog_card2_desc: 'Prinsip dasar mengamankan infrastruktur ISP dari serangan DDoS dan akses tidak sah.',
+            blog_read_more: 'Baca Selengkapnya',
+            project_title: 'Pengalaman Profesional',
+            exp_1_title: 'NOC Intern',
+            exp_1_desc: 'Memonitoring stabilitas infrastruktur kritis di lingkungan Data Center secara real-time dan inspeksi rutin perangkat jaringan.',
+            exp_2_title: 'Teknisi Lapangan',
+            exp_2_desc: 'Instalasi fisik layanan ISP, penarikan kabel Fiber Optik (FO), dan konfigurasi awal perangkat ONT pelanggan.',
+            exp_3_title: 'Technical Support',
+            exp_3_desc: 'Dukungan teknis colocation, instalasi OS server, dan pemantauan trafik bandwidth untuk memastikan SLA terpenuhi.',
+            skills: [
+                { name: 'Cisco', img: 'https://cdn.worldvectorlogo.com/logos/cisco-2.svg' },
+                { name: 'Mikrotik', img: 'https://cdn.worldvectorlogo.com/logos/mikrotik.svg' },
+                { name: 'Huawei', img: 'https://cdn.worldvectorlogo.com/logos/huawei-2.svg' },
+                { name: 'JavaScript', img: './assets/js.svg' },
+                { name: 'Tailwind', img: 'https://cdn.worldvectorlogo.com/logos/tailwindcss.svg' },
+                { name: 'ReactJS', img: 'https://cdn.worldvectorlogo.com/logos/react-2.svg' }
+            ]
+        },
+        en: {
+            name: 'Nouva Prasetya',
+            nav_home: 'Home',
+            nav_skills: 'Skills',
+            nav_blog: 'Blog',
+            nav_exp: 'Experience',
+            hero_title: 'Hi, I\'m Nouva! 🚀',
+            hero_subtitle: 'Network Engineer & Web Developer',
+            hero_desc: 'Cyber Media Jakarta Vocational graduate (TKJ). Specialized in network infrastructure, data center operations, and modern web development.',
+            hero_btn_contact: 'Contact Me',
+            hero_btn_view: 'View Experience',
+            skill_title: 'Tech Stack & Skills',
+            blog_title: 'Digital Notes',
+            blog_card1_title: 'VLAN Configuration',
+            blog_card1_desc: 'Technical notes on implementing virtual LANs for data center traffic isolation...',
+            blog_card2_title: 'Network Security',
+            blog_card2_desc: 'Core principles of securing ISP infrastructure from DDoS attacks and unauthorized access.',
+            blog_read_more: 'Read More',
+            project_title: 'Professional Experience',
+            exp_1_title: 'NOC Intern',
+            exp_1_desc: 'Monitoring critical infrastructure stability in Data Center environments and routine network device inspections.',
+            exp_2_title: 'Field Technician',
+            exp_2_desc: 'ISP physical installation, Fiber Optic (FO) cabling, and initial configuration of customer ONT devices.',
+            exp_3_title: 'Technical Support',
+            exp_3_desc: 'Colocation technical support, server OS installation, and bandwidth traffic monitoring to meet SLA requirements.',
+            skills: [
+                { name: 'Cisco', img: 'https://cdn.worldvectorlogo.com/logos/cisco-2.svg' },
+                { name: 'Mikrotik', img: 'https://cdn.worldvectorlogo.com/logos/mikrotik.svg' },
+                { name: 'Huawei', img: 'https://cdn.worldvectorlogo.com/logos/huawei-2.svg' },
+                { name: 'JavaScript', img: './assets/js.svg' },
+                { name: 'Tailwind', img: 'https://cdn.worldvectorlogo.com/logos/tailwindcss.svg' },
+                { name: 'ReactJS', img: 'https://cdn.worldvectorlogo.com/logos/react-2.svg' }
+            ]
+        }
+    }
+}" :class="darkMode ? 'dark' : ''" @scroll.window="scrolled = window.pageYOffset > 20">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-[100] glass-nav" :class="scrolled ? 'nav-scrolled py-3' : 'py-5'">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#hero" class="flex items-center gap-2 font-black text-2xl italic tracking-tighter group relative z-[110]">
+                <div class="w-10 h-10 bg-primary dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-darkBg shadow-lg group-hover:rotate-12 transition-transform">N</div>
+                <span x-text="content[lang].name" class="hidden sm:block"></span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-8 font-bold">
+                <a href="#skills" class="hover:text-primary dark:hover:text-blue-400 transition-all hover:scale-105" x-text="content[lang].nav_skills"></a>
+                <a href="#blog" class="hover:text-primary dark:hover:text-blue-400 transition-all hover:scale-105" x-text="content[lang].nav_blog"></a>
+                <a href="#experience" class="hover:text-primary dark:hover:text-blue-400 transition-all hover:scale-105" x-text="content[lang].nav_exp"></a>
+                
+                <div class="flex items-center gap-4 border-l pl-8 border-gray-200 dark:border-white/10">
+                    <button @click="lang = (lang === 'id' ? 'en' : 'id')" class="text-xs font-black px-3 py-1.5 rounded-full bg-gray-100 dark:bg-white/10 uppercase hover:bg-primary hover:text-white transition-all" x-text="lang"></button>
+                    
+                    <button @click="darkMode = !darkMode" class="theme-toggle-container w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-100 dark:bg-white/10 hover:shadow-xl">
+                        <div class="icon-wrapper sun-icon">
+                            <svg class="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="icon-wrapper moon-icon">
+                            <svg class="w-6 h-6 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="flex items-center gap-3 md:hidden relative z-[110]">
+                <button @click="darkMode = !darkMode" class="theme-toggle-container w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-white/10 overflow-hidden">
+                    <div class="icon-wrapper sun-icon">
+                        <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z"/></svg>
+                    </div>
+                    <div class="icon-wrapper moon-icon">
+                        <svg class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                    </div>
+                </button>
+                <button @click="mobileMenu = !mobileMenu" class="p-2 w-10 h-10 bg-primary text-white dark:bg-white dark:text-darkBg rounded-xl flex items-center justify-center hover:scale-105 transition-all">
+                    <div class="relative w-6 h-6">
+                        <span class="absolute block w-6 h-0.5 bg-current transition-all duration-300" :style="mobileMenu ? 'transform: rotate(45deg); top: 50%;' : 'top: 25%'"></span>
+                        <span class="absolute block w-6 h-0.5 bg-current transition-all duration-300" :style="mobileMenu ? 'opacity: 0' : 'top: 50%'"></span>
+                        <span class="absolute block w-6 h-0.5 bg-current transition-all duration-300" :style="mobileMenu ? 'transform: rotate(-45deg); top: 50%;' : 'top: 75%'"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="mobile-menu-enter-active"
+             x-transition:leave="mobile-menu-leave-active"
+             class="fixed inset-0 bg-white/95 dark:bg-darkBg/95 backdrop-blur-md z-[105] md:hidden flex flex-col justify-center items-center gap-6 px-6" 
+             x-cloak>
+            <div class="flex flex-col items-center gap-6 w-full mt-[-10vh]">
+                <a href="#hero" @click="mobileMenu = false" class="text-4xl font-black italic hover:text-primary transition-all tracking-tighter" x-text="content[lang].nav_home"></a>
+                <a href="#skills" @click="mobileMenu = false" class="text-4xl font-black italic hover:text-primary transition-all tracking-tighter" x-text="content[lang].nav_skills"></a>
+                <a href="#blog" @click="mobileMenu = false" class="text-4xl font-black italic hover:text-primary transition-all tracking-tighter" x-text="content[lang].nav_blog"></a>
+                <a href="#experience" @click="mobileMenu = false" class="text-4xl font-black italic hover:text-primary transition-all tracking-tighter" x-text="content[lang].nav_exp"></a>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-100 dark:border-white/10 w-full max-w-[200px] flex justify-center gap-6">
+                <button @click="lang = 'id'" :class="lang === 'id' ? 'bg-primary text-white scale-125' : 'bg-gray-100 dark:bg-white/5 opacity-50'" class="w-12 h-12 rounded-full font-black text-xs transition-all">ID</button>
+                <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-primary text-white scale-125' : 'bg-gray-100 dark:bg-white/5 opacity-50'" class="w-12 h-12 rounded-full font-black text-xs transition-all">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
+        <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center text-center md:text-left">
+            <div class="order-2 md:order-1 space-y-6" data-aos="fade-up">
+                <div class="inline-block py-2 px-4 bg-primary/5 dark:bg-white/5 rounded-full border border-primary/10 dark:border-white/10">
+                    <span class="text-xs font-black uppercase tracking-widest" x-text="content[lang].hero_subtitle"></span>
+                </div>
+                <h1 class="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter" x-text="content[lang].hero_title"></h1>
+                <p class="text-lg opacity-80 max-w-lg mx-auto md:mx-0 leading-relaxed" x-text="content[lang].hero_desc"></p>
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 justify-center md:justify-start">
+                    <button class="bg-primary text-white dark:bg-white dark:text-darkBg px-10 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition-all" x-text="content[lang].hero_btn_contact"></button>
+                    <a href="#experience" class="px-10 py-5 border-2 border-primary/20 dark:border-white/20 rounded-full font-black text-lg hover:bg-primary/5 transition-all flex items-center justify-center gap-2">
+                        <span x-text="content[lang].hero_btn_view"></span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-width="3" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="order-1 md:order-2 flex justify-center" data-aos="zoom-in">
+                <div class="relative w-64 h-64 md:w-[400px] md:h-[400px]">
+                    <div class="absolute inset-0 bg-primary/10 dark:bg-blue-400/5 rounded-full animate-float"></div>
+                    <div class="absolute inset-10 bg-gradient-to-br from-primary via-indigo-600 to-blue-500 rounded-[3rem] rotate-12 flex items-center justify-center shadow-2xl">
+                        <svg class="w-24 h-24 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 px-6 bg-gray-50/50 dark:bg-slate-900/20">
+        <div class="container mx-auto">
+            <h3 class="text-4xl md:text-6xl font-black mb-20 text-center tracking-tighter" x-text="content[lang].skill_title" data-aos="fade-up"></h3>
+            <!-- Grid terpusat untuk semua ukuran layar -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 justify-center justify-items-center">
+                <template x-for="skill in content[lang].skills">
+                    <div class="skill-card group w-full max-w-[160px]">
+                        <div class="w-16 h-16 flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+                            <img :src="skill.img" :alt="skill.name" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0">
+                        </div>
+                        <span class="font-black text-xs uppercase tracking-widest opacity-60 text-center" x-text="skill.name"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-32 px-6">
+        <div class="container mx-auto">
+            <h3 class="text-4xl md:text-6xl font-black mb-16 tracking-tighter text-center" x-text="content[lang].blog_title" data-aos="fade-down"></h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                <div class="p-8 bg-white dark:bg-slate-800/40 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-white/5 hover:-translate-y-2 transition-all group">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-blue-400/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2"/></svg>
+                    </div>
+                    <h5 class="text-xl font-black mb-4 group-hover:text-primary dark:group-hover:text-blue-400" x-text="content[lang].blog_card1_title"></h5>
+                    <p class="opacity-60 text-sm leading-relaxed" x-text="content[lang].blog_card1_desc"></p>
+                    <div class="pt-6">
+                        <a href="#" class="text-xs font-black uppercase border-b-2 border-primary/20 pb-1" x-text="content[lang].blog_read_more"></a>
+                    </div>
+                </div>
+                <div class="p-8 bg-white dark:bg-slate-800/40 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-white/5 hover:-translate-y-2 transition-all group">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-blue-400/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2"/></svg>
+                    </div>
+                    <h5 class="text-xl font-black mb-4 group-hover:text-primary dark:group-hover:text-blue-400" x-text="content[lang].blog_card2_title"></h5>
+                    <p class="opacity-60 text-sm leading-relaxed" x-text="content[lang].blog_card2_desc"></p>
+                    <div class="pt-6">
+                        <a href="#" class="text-xs font-black uppercase border-b-2 border-primary/20 pb-1" x-text="content[lang].blog_read_more"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-32 px-6 bg-primary dark:bg-slate-950 text-white md:rounded-[6rem] mx-0 md:mx-6 mb-16 relative overflow-hidden">
+        <div class="container mx-auto relative z-10">
+            <h3 class="text-4xl md:text-7xl font-black mb-24 text-center tracking-tighter" x-text="content[lang].project_title" data-aos="fade-up"></h3>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 transition-all" data-aos="fade-left">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center font-black">01</div>
+                        <h4 class="text-2xl font-black italic" x-text="content[lang].exp_1_title"></h4>
+                    </div>
+                    <p class="opacity-70 leading-relaxed" x-text="content[lang].exp_1_desc"></p>
+                </div>
+                <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 transition-all" data-aos="fade-left" data-aos-delay="100">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center font-black">02</div>
+                        <h4 class="text-2xl font-black italic" x-text="content[lang].exp_2_title"></h4>
+                    </div>
+                    <p class="opacity-70 leading-relaxed" x-text="content[lang].exp_2_desc"></p>
+                </div>
+                <div class="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 transition-all" data-aos="fade-left" data-aos-delay="200">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center font-black">03</div>
+                        <h4 class="text-2xl font-black italic" x-text="content[lang].exp_3_title"></h4>
+                    </div>
+                    <p class="opacity-70 leading-relaxed" x-text="content[lang].exp_3_desc"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center opacity-30">
+        <p class="text-[10px] font-black uppercase tracking-[0.5em]">&copy; 2026 Kazu Developer</p>
+    </footer>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        document.addEventListener('alpine:init', () => {
+            const el = document.querySelector('[x-data]');
+            if (el) {
+                const observer = new MutationObserver(() => {
+                    const data = el.__x_data_stack[0];
+                    document.body.style.overflow = data.mobileMenu ? 'hidden' : '';
+                });
+                observer.observe(el, { attributes: true, subtree: true });
+            }
+        });
+    </script>
+</body>
+</html>
